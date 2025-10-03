@@ -56,10 +56,11 @@ aside:not([aria-label="Main navigation"]) {
   display: none !important;
 }
 
-/* PRESERVE SEARCH AND EXPLORE ELEMENTS - Don't hide search/explore functionality */
+/* FORCE SEARCH BAR TO BE VISIBLE - Override any hiding */
 input[type="search"],
 input[placeholder*="search"],
 input[placeholder*="Search"],
+input[placeholder*="Search Substack"],
 button[aria-label*="search"],
 button[aria-label*="Search"],
 button[aria-label*="explore"],
@@ -74,6 +75,17 @@ button[aria-label*="Explore"],
 .Explore {
   display: block !important;
   visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force any search-related elements to be visible */
+*:has(input[type="search"]),
+*:has(input[placeholder*="search"]),
+*:has(input[placeholder*="Search"]),
+*:has(input[placeholder*="Search Substack"]) {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Preserve elements containing search/explore functionality */

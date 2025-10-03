@@ -190,6 +190,40 @@ function hideRecommendations() {
     }
   });
 
+  // Method 5: FORCE SEARCH BAR TO BE VISIBLE
+  // Find and restore any hidden search elements
+  document.querySelectorAll('input[type="search"], input[placeholder*="search"], input[placeholder*="Search"], input[placeholder*="Search Substack"]').forEach(el => {
+    el.style.display = 'block';
+    el.style.visibility = 'visible';
+    el.style.opacity = '1';
+    console.log('🔍 Restored search input:', el);
+  });
+  
+  // Find and restore any hidden search buttons
+  document.querySelectorAll('button[aria-label*="search"], button[aria-label*="Search"], button[aria-label*="explore"], button[aria-label*="Explore"]').forEach(el => {
+    el.style.display = 'block';
+    el.style.visibility = 'visible';
+    el.style.opacity = '1';
+    console.log('🔍 Restored search button:', el);
+  });
+  
+  // Find and restore any parent containers of search elements
+  document.querySelectorAll('*').forEach(el => {
+    const hasSearch = el.querySelector('input[type="search"]') || 
+                     el.querySelector('input[placeholder*="search"]') ||
+                     el.querySelector('input[placeholder*="Search"]') ||
+                     el.querySelector('input[placeholder*="Search Substack"]') ||
+                     el.querySelector('button[aria-label*="search"]') ||
+                     el.querySelector('button[aria-label*="Search"]');
+    
+    if (hasSearch) {
+      el.style.display = 'block';
+      el.style.visibility = 'visible';
+      el.style.opacity = '1';
+      console.log('🔍 Restored search container:', el);
+    }
+  });
+
   console.log(`🚫 Hidden ${removedCount} elements`);
 }
 
