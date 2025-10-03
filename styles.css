@@ -1,0 +1,48 @@
+/* Substack Sidebar Blocker - Simple and Effective */
+
+/* Hide any element that contains "Up Next" text */
+*:has-text("Up Next") {
+  display: none !important;
+}
+
+/* Hide any element that contains "Trending" text */
+*:has-text("Trending") {
+  display: none !important;
+}
+
+/* Hide any element that contains "See all" text (for recommendation sections) */
+*:has-text("See all") {
+  display: none !important;
+}
+
+/* Hide recommendation-related classes */
+[class*="recommendation"],
+[class*="trending"],
+[class*="upNext"],
+[class*="sidebar"]:not([aria-label="Main navigation"]) {
+  display: none !important;
+}
+
+/* Hide elements with recommendation aria-labels */
+[aria-label*="recommendations"],
+[aria-label*="trending"],
+[aria-label*="up next"] {
+  display: none !important;
+}
+
+/* Hide recommendation data attributes */
+[data-testid*="recommendations"],
+[data-testid*="trending"] {
+  display: none !important;
+}
+
+/* Adjust main content to use full width */
+.reader-nav-root {
+  --size-right-sidebar: 0px !important;
+  max-width: 100% !important;
+}
+
+/* Hide any element that might be a right sidebar */
+aside:not([aria-label="Main navigation"]) {
+  display: none !important;
+}

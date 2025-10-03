@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Substack Sidebar Blocker",
+  "version": "2.0",
+  "description": "Blocks the 'Up Next' and 'Trending' sections on Substack to minimize distractions",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.substack.com/*",
+        "*://substack.com/*"
+      ],
+      "css": ["styles.css"],
+      "js": ["script.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

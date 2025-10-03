@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substack Blocker Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+        .main-content {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sidebar {
+            width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .item {
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+        .test-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .navigation {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .navigation a {
+            color: #2196f3;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h2>🧪 Substack Sidebar Blocker Test</h2>
+        <p>This page simulates Substack with navigation and recommendation sections.</p>
+        <p><strong>Expected:</strong> The right sidebar should be hidden, but navigation should remain.</p>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="navigation">
+                <a href="#home">Home</a>
+                <a href="#profile">Profile</a>
+                <a href="#settings">Settings</a>
+                <a href="#help">Help</a>
+            </div>
+            
+            <h1>Main Content Area</h1>
+            <p>This is the main content that should remain visible. The sidebar on the right should be hidden by the extension.</p>
+            
+            <div class="section">
+                <h3>Recent Posts</h3>
+                <div class="item">
+                    <strong>What sidebar?</strong><br>
+                    <small>By Seth Werkheiser • 18h ago</small>
+                </div>
+                <div class="item">
+                    <strong>This is how I'm using Notes now</strong><br>
+                    <small>By Ved Shankar • Sep 17</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="section">
+                <h3>Up Next</h3>
+                <a href="#" style="color: #666; text-decoration: none;">See all</a>
+                <div class="item">
+                    <strong>ChinaTalk</strong><br>
+                    <small>Launching our Defense Podcast! Silicon Shield is Fake, Drones + Futu...</small><br>
+                    <small>21m read • 14 likes • 2 comments</small>
+                </div>
+                <div class="item">
+                    <strong>The Pursuit of Happiness</strong><br>
+                    <small>Subjective time</small><br>
+                    <small>6m read • 80 likes • 55 comments</small>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Trending</h3>
+                <a href="#" style="color: #666; text-decoration: none;">See all</a>
+                <div class="item">
+                    <strong>Substack Flower Badges reveal supporters and paid status shifts</strong><br>
+                    <small>1:26 PM</small>
+                </div>
+                <div class="item">
+                    <strong>Starbucks closes hundreds of stores in North America</strong><br>
+                    <small>4:57 AM</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some dynamic content to test the extension
+        setTimeout(() => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
+                    <h3>More Recommendations</h3>
+                    <div class="item">
+                        <strong>Dynamic Content</strong><br>
+                        <small>This was added after page load</small>
+                    </div>
+                `;
+                sidebar.appendChild(newSection);
+            }
+        }, 2000);
+
+        // Log when elements are hidden
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const target = mutation.target;
+                    if (target.style.display === 'none') {
+                        console.log('Element hidden:', target);
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.body, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: ['style']
+        });
+    </script>
+</body>
+</html>
