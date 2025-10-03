@@ -75,7 +75,7 @@ function hideRecommendations() {
     }
   });
   
-  // Method 2: Hide elements by CSS selectors
+  // Method 2: Hide elements by CSS selectors - TARGET SUBSTACK SPECIFIC STRUCTURE
   const selectors = [
     '[class*="recommendation"]:not([aria-label="Main navigation"])',
     '[class*="trending"]:not([aria-label="Main navigation"])',
@@ -83,7 +83,10 @@ function hideRecommendations() {
     '[aria-label*="recommendations"]',
     '[aria-label*="trending"]',
     '[data-testid*="recommendations"]',
-    '[data-testid*="trending"]'
+    '[data-testid*="trending"]',
+    // Target Substack's specific structure - but be very careful
+    '.pencraft:has-text("Up Next"):not(:has(button[data-href])):not(:has(input))',
+    '.pencraft:has-text("Trending"):not(:has(button[data-href])):not(:has(input))'
   ];
   
   selectors.forEach(selector => {
@@ -169,6 +172,24 @@ function hideRecommendations() {
     }
   });
   
+  // Method 4: Target Substack's specific structure - BE VERY CAREFUL
+  // Look for elements that contain recommendation text but are NOT navigation
+  document.querySelectorAll('.pencraft').forEach(el => {
+    const text = el.textContent || '';
+    const hasRecommendationText = text.includes('Up Next') || text.includes('Trending');
+    const hasNavigation = el.querySelector('button[data-href]') || 
+                         el.querySelector('a[href]') ||
+                         el.querySelector('input') ||
+                         el.querySelector('[aria-label="Main navigation"]');
+    const isNotTooLarge = text.length < 2000;
+    
+    if (hasRecommendationText && !hasNavigation && isNotTooLarge) {
+      el.style.display = 'none';
+      console.log('🚫 Hidden Substack pencraft element:', el);
+      removedCount++;
+    }
+  });
+
   console.log(`🚫 Hidden ${removedCount} elements`);
 }
 

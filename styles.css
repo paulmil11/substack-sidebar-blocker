@@ -47,6 +47,15 @@ aside:not([aria-label="Main navigation"]) {
   display: none !important;
 }
 
+/* Target Substack's specific structure - but preserve navigation */
+.pencraft:has-text("Up Next"):not(:has(button[data-href])):not(:has(input)):not(:has(a[href])) {
+  display: none !important;
+}
+
+.pencraft:has-text("Trending"):not(:has(button[data-href])):not(:has(input)):not(:has(a[href])) {
+  display: none !important;
+}
+
 /* PRESERVE SEARCH AND EXPLORE ELEMENTS - Don't hide search/explore functionality */
 input[type="search"],
 input[placeholder*="search"],
