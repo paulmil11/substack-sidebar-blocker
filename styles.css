@@ -1,17 +1,17 @@
 /* Substack Sidebar Blocker - Simple and Effective */
 
-/* Hide any element that contains "Up Next" text */
-*:has-text("Up Next") {
+/* Hide any element that contains "Up Next" text - BUT PRESERVE SEARCH */
+*:has-text("Up Next"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
   display: none !important;
 }
 
-/* Hide any element that contains "Trending" text */
-*:has-text("Trending") {
+/* Hide any element that contains "Trending" text - BUT PRESERVE SEARCH */
+*:has-text("Trending"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
   display: none !important;
 }
 
-/* Hide any element that contains "See all" text (for recommendation sections) */
-*:has-text("See all") {
+/* Hide any element that contains "See all" text (for recommendation sections) - BUT PRESERVE SEARCH */
+*:has-text("See all"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
   display: none !important;
 }
 

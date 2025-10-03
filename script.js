@@ -6,7 +6,7 @@ function hideRecommendations() {
   
   let removedCount = 0;
   
-  // Method 1: Find and hide elements by text content
+  // Method 1: Find and hide elements by text content - PRESERVE SEARCH
   const walker = document.createTreeWalker(
     document.body,
     NodeFilter.SHOW_TEXT,
@@ -26,15 +26,26 @@ function hideRecommendations() {
     let element = textNode.parentElement;
     let attempts = 0;
     
-    // Find a good container to hide
+    // Find a good container to hide - BUT PRESERVE SEARCH
     while (element && attempts < 10) {
       const tagName = element.tagName.toLowerCase();
       const text = element.textContent || '';
       
+      // Check if this element contains search functionality
+      const hasSearch = element.querySelector('input[type="search"]') || 
+                       element.querySelector('input[placeholder*="search"]') ||
+                       element.querySelector('input[placeholder*="Search"]') ||
+                       element.querySelector('[aria-label*="search"]') ||
+                       element.querySelector('[aria-label*="Search"]') ||
+                       text.includes('Search Substack') ||
+                       text.includes('search');
+      
       // Hide if it's a reasonable container and contains recommendation content
+      // BUT NOT if it contains search functionality
       if ((tagName === 'div' || tagName === 'section' || tagName === 'aside') &&
           text.length < 2000 && // Not too large
           text.length > 10 && // Not too small
+          !hasSearch && // PRESERVE SEARCH ELEMENTS
           !element.querySelector('[aria-label="Main navigation"]') && // Not main nav
           !element.querySelector('button[data-href]') && // Not navigation buttons
           !element.querySelector('a[href*="/"]')) { // Not navigation links
@@ -64,9 +75,19 @@ function hideRecommendations() {
   selectors.forEach(selector => {
     try {
       document.querySelectorAll(selector).forEach(el => {
+        // Check if this element contains search functionality
+        const hasSearch = el.querySelector('input[type="search"]') || 
+                         el.querySelector('input[placeholder*="search"]') ||
+                         el.querySelector('input[placeholder*="Search"]') ||
+                         el.querySelector('[aria-label*="search"]') ||
+                         el.querySelector('[aria-label*="Search"]') ||
+                         el.textContent.includes('Search Substack') ||
+                         el.textContent.includes('search');
+        
         if (!el.querySelector('[aria-label="Main navigation"]') &&
             !el.querySelector('button[data-href]') &&
-            !el.querySelector('a[href*="/"]')) {
+            !el.querySelector('a[href*="/"]') &&
+            !hasSearch) { // PRESERVE SEARCH ELEMENTS
           el.style.display = 'none';
           console.log('🚫 Hidden element by selector:', el);
           removedCount++;
@@ -77,12 +98,23 @@ function hideRecommendations() {
     }
   });
   
-  // Method 3: Hide any remaining elements with recommendation text
+  // Method 3: Hide any remaining elements with recommendation text - PRESERVE SEARCH
   document.querySelectorAll('*').forEach(el => {
     const text = el.textContent || '';
+    
+    // Check if this element contains search functionality
+    const hasSearch = el.querySelector('input[type="search"]') || 
+                     el.querySelector('input[placeholder*="search"]') ||
+                     el.querySelector('input[placeholder*="Search"]') ||
+                     el.querySelector('[aria-label*="search"]') ||
+                     el.querySelector('[aria-label*="Search"]') ||
+                     text.includes('Search Substack') ||
+                     text.includes('search');
+    
     if ((text.includes('Up Next') || text.includes('Trending')) &&
         text.length < 1000 &&
         text.length > 10 &&
+        !hasSearch && // PRESERVE SEARCH ELEMENTS
         !el.querySelector('[aria-label="Main navigation"]') &&
         !el.querySelector('button[data-href]') &&
         !el.querySelector('a[href*="/"]') &&
