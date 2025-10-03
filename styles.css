@@ -47,26 +47,34 @@ aside:not([aria-label="Main navigation"]) {
   display: none !important;
 }
 
-/* PRESERVE SEARCH ELEMENTS - Don't hide search functionality */
+/* PRESERVE SEARCH AND EXPLORE ELEMENTS - Don't hide search/explore functionality */
 input[type="search"],
 input[placeholder*="search"],
 input[placeholder*="Search"],
 button[aria-label*="search"],
 button[aria-label*="Search"],
+button[aria-label*="explore"],
+button[aria-label*="Explore"],
 [aria-label*="search"],
 [aria-label*="Search"],
+[aria-label*="explore"],
+[aria-label*="Explore"],
 .search,
-.Search {
+.Search,
+.explore,
+.Explore {
   display: block !important;
   visibility: visible !important;
 }
 
-/* Preserve elements containing search functionality */
+/* Preserve elements containing search/explore functionality */
 *:has(input[type="search"]),
 *:has(input[placeholder*="search"]),
 *:has(input[placeholder*="Search"]),
 *:has(button[aria-label*="search"]),
-*:has(button[aria-label*="Search"]) {
+*:has(button[aria-label*="Search"]),
+*:has(button[aria-label*="explore"]),
+*:has(button[aria-label*="Explore"]) {
   display: block !important;
   visibility: visible !important;
 }

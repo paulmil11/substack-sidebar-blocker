@@ -31,7 +31,7 @@ function hideRecommendations() {
       const tagName = element.tagName.toLowerCase();
       const text = element.textContent || '';
       
-      // Check if this element contains search functionality (top-right search bar)
+      // Check if this element contains search functionality (Explore/search)
       const hasSearch = element.querySelector('input[type="search"]') || 
                        element.querySelector('input[placeholder*="search"]') ||
                        element.querySelector('input[placeholder*="Search"]') ||
@@ -39,12 +39,20 @@ function hideRecommendations() {
                        element.querySelector('[aria-label*="Search"]') ||
                        element.querySelector('button[aria-label*="search"]') ||
                        element.querySelector('button[aria-label*="Search"]') ||
+                       element.querySelector('button[aria-label*="explore"]') ||
+                       element.querySelector('button[aria-label*="Explore"]') ||
                        text.includes('Search Substack') ||
                        text.includes('search') ||
                        text.includes('Search') ||
+                       text.includes('Explore') ||
+                       text.includes('explore') ||
+                       // Check for navigation elements that might be search/explore
+                       element.querySelector('[data-href*="explore"]') ||
+                       element.querySelector('[data-href*="search"]') ||
                        // Check for top-right positioned elements that might be search
                        (element.style.position === 'fixed' && element.style.top && element.style.right) ||
-                       (element.classList.contains('search') || element.classList.contains('Search'));
+                       (element.classList.contains('search') || element.classList.contains('Search') || 
+                        element.classList.contains('explore') || element.classList.contains('Explore'));
       
       // Hide if it's a reasonable container and contains recommendation content
       // BUT NOT if it contains search functionality
@@ -81,7 +89,7 @@ function hideRecommendations() {
   selectors.forEach(selector => {
     try {
       document.querySelectorAll(selector).forEach(el => {
-        // Check if this element contains search functionality (top-right search bar)
+        // Check if this element contains search functionality (Explore/search)
         const hasSearch = el.querySelector('input[type="search"]') || 
                          el.querySelector('input[placeholder*="search"]') ||
                          el.querySelector('input[placeholder*="Search"]') ||
@@ -89,12 +97,20 @@ function hideRecommendations() {
                          el.querySelector('[aria-label*="Search"]') ||
                          el.querySelector('button[aria-label*="search"]') ||
                          el.querySelector('button[aria-label*="Search"]') ||
+                         el.querySelector('button[aria-label*="explore"]') ||
+                         el.querySelector('button[aria-label*="Explore"]') ||
                          el.textContent.includes('Search Substack') ||
                          el.textContent.includes('search') ||
                          el.textContent.includes('Search') ||
+                         el.textContent.includes('Explore') ||
+                         el.textContent.includes('explore') ||
+                         // Check for navigation elements that might be search/explore
+                         el.querySelector('[data-href*="explore"]') ||
+                         el.querySelector('[data-href*="search"]') ||
                          // Check for top-right positioned elements that might be search
                          (el.style.position === 'fixed' && el.style.top && el.style.right) ||
-                         (el.classList.contains('search') || el.classList.contains('Search'));
+                         (el.classList.contains('search') || el.classList.contains('Search') || 
+                          el.classList.contains('explore') || el.classList.contains('Explore'));
         
         if (!el.querySelector('[aria-label="Main navigation"]') &&
             !el.querySelector('button[data-href]') &&
@@ -114,7 +130,7 @@ function hideRecommendations() {
   document.querySelectorAll('*').forEach(el => {
     const text = el.textContent || '';
     
-    // Check if this element contains search functionality (top-right search bar)
+    // Check if this element contains search functionality (Explore/search)
     const hasSearch = el.querySelector('input[type="search"]') || 
                      el.querySelector('input[placeholder*="search"]') ||
                      el.querySelector('input[placeholder*="Search"]') ||
@@ -122,12 +138,20 @@ function hideRecommendations() {
                      el.querySelector('[aria-label*="Search"]') ||
                      el.querySelector('button[aria-label*="search"]') ||
                      el.querySelector('button[aria-label*="Search"]') ||
+                     el.querySelector('button[aria-label*="explore"]') ||
+                     el.querySelector('button[aria-label*="Explore"]') ||
                      text.includes('Search Substack') ||
                      text.includes('search') ||
                      text.includes('Search') ||
+                     text.includes('Explore') ||
+                     text.includes('explore') ||
+                     // Check for navigation elements that might be search/explore
+                     el.querySelector('[data-href*="explore"]') ||
+                     el.querySelector('[data-href*="search"]') ||
                      // Check for top-right positioned elements that might be search
                      (el.style.position === 'fixed' && el.style.top && el.style.right) ||
-                     (el.classList.contains('search') || el.classList.contains('Search'));
+                     (el.classList.contains('search') || el.classList.contains('Search') || 
+                      el.classList.contains('explore') || el.classList.contains('Explore'));
     
     if ((text.includes('Up Next') || text.includes('Trending')) &&
         text.length < 1000 &&
