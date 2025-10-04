@@ -1,6 +1,8 @@
 # Substack Sidebar Blocker
 
-A simple Chrome extension that replaces the "Trending" section on Substack with a clean message.
+A simple Chrome extension that removes the trending section.
+
+<img width="641" height="414" alt="image" src="https://github.com/user-attachments/assets/72f20f81-13c5-4609-afe3-98a27b16b4c0" />
 
 ## Features
 
