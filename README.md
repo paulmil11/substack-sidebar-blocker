@@ -2,8 +2,7 @@
 
 A simple Chrome extension that removes the trending section.
 
-![Uploading image.png…]()
-
+<img width="2564" height="1658" alt="image" src="https://github.com/user-attachments/assets/72f20f81-13c5-4609-afe3-98a27b16b4c0" />
 
 ## Features
 
