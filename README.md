@@ -1,12 +1,12 @@
 # Substack Sidebar Blocker
 
-A simple Chrome extension that blocks the "Up Next" and "Trending" sections on Substack to minimize distractions.
+A simple Chrome extension that replaces the "Trending" section on Substack with a clean message.
 
 ## Features
 
-- Blocks "Up Next" recommendation sections
-- Blocks "Trending" sections  
-- Preserves all navigation and functionality
+- Keeps "Up Next" recommendations visible
+- Replaces "Trending" section with "There is nothing to see here"
+- Preserves all navigation and search functionality
 - Lightweight and fast
 - No data collection
 

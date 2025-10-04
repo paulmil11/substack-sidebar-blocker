@@ -1,101 +1,23 @@
-/* Substack Sidebar Blocker - Simple and Effective */
+/* Substack Sidebar Blocker - Remove Trending Completely */
+/* Keep Up Next visible, remove Trending sections entirely */
 
-/* Hide any element that contains "Up Next" text - BUT PRESERVE SEARCH */
-*:has-text("Up Next"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
-  display: none !important;
-}
-
-/* Hide any element that contains "Trending" text - BUT PRESERVE SEARCH */
-*:has-text("Trending"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
-  display: none !important;
-}
-
-/* Hide any element that contains "See all" text (for recommendation sections) - BUT PRESERVE SEARCH */
-*:has-text("See all"):not(:has(input[type="search"])):not(:has(input[placeholder*="search"])):not(:has(input[placeholder*="Search"])) {
-  display: none !important;
-}
-
-/* Hide recommendation-related classes */
-[class*="recommendation"],
-[class*="trending"],
-[class*="upNext"],
-[class*="sidebar"]:not([aria-label="Main navigation"]) {
-  display: none !important;
-}
-
-/* Hide elements with recommendation aria-labels */
-[aria-label*="recommendations"],
-[aria-label*="trending"],
-[aria-label*="up next"] {
-  display: none !important;
-}
-
-/* Hide recommendation data attributes */
-[data-testid*="recommendations"],
-[data-testid*="trending"] {
-  display: none !important;
-}
-
-/* Adjust main content to use full width */
-.reader-nav-root {
-  --size-right-sidebar: 0px !important;
-  max-width: 100% !important;
-}
-
-/* Hide any element that might be a right sidebar */
-aside:not([aria-label="Main navigation"]) {
-  display: none !important;
-}
-
-/* Target Substack's specific structure - but preserve navigation */
-.pencraft:has-text("Up Next"):not(:has(button[data-href])):not(:has(input)):not(:has(a[href])) {
-  display: none !important;
-}
-
-.pencraft:has-text("Trending"):not(:has(button[data-href])):not(:has(input)):not(:has(a[href])) {
-  display: none !important;
-}
-
-/* FORCE SEARCH BAR TO BE VISIBLE - Override any hiding */
-input[type="search"],
-input[placeholder*="search"],
-input[placeholder*="Search"],
-input[placeholder*="Search Substack"],
-button[aria-label*="search"],
-button[aria-label*="Search"],
-button[aria-label*="explore"],
-button[aria-label*="Explore"],
-[aria-label*="search"],
+/* Preserve all search functionality and navigation */
+input,
+[type="search"],
+[placeholder*="Search"],
+[placeholder*="search"],
 [aria-label*="Search"],
-[aria-label*="explore"],
-[aria-label*="Explore"],
-.search,
-.Search,
-.explore,
-.Explore {
+[aria-label*="search"],
+[role="search"],
+header,
+nav {
   display: block !important;
   visibility: visible !important;
-  opacity: 1 !important;
 }
 
-/* Force any search-related elements to be visible */
-*:has(input[type="search"]),
-*:has(input[placeholder*="search"]),
-*:has(input[placeholder*="Search"]),
-*:has(input[placeholder*="Search Substack"]) {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Preserve elements containing search/explore functionality */
-*:has(input[type="search"]),
-*:has(input[placeholder*="search"]),
-*:has(input[placeholder*="Search"]),
-*:has(button[aria-label*="search"]),
-*:has(button[aria-label*="Search"]),
-*:has(button[aria-label*="explore"]),
-*:has(button[aria-label*="Explore"]) {
+/* Keep Up Next sections visible */
+[class*="upNext"],
+[aria-label*="up next"] {
   display: block !important;
   visibility: visible !important;
 }
