@@ -142,18 +142,29 @@ function removeTrendingSection() {
     }
   });
   
-  // Method 4: More aggressive targeting - look for any element with "Trending" text
-  const allElements = document.querySelectorAll('*');
-  allElements.forEach(el => {
-    if (el.textContent && el.textContent.trim() === 'Trending') {
+  // Method 4: Conservative targeting - only remove if it's clearly a trending section
+  document.querySelectorAll('*').forEach(el => {
+    const text = el.textContent || '';
+    if (text.trim() === 'Trending' && 
+        !el.closest('header') &&
+        !el.closest('nav') &&
+        !el.closest('main') &&
+        !el.closest('[role="main"]')) {
+      
       let parent = el.parentElement;
       let attempts = 0;
-      while (parent && attempts < 5) {
-        if (parent.textContent && parent.textContent.includes('Trending') && 
-            !parent.textContent.includes('Up Next') &&
-            parent.textContent.length < 2000) {
+      while (parent && attempts < 3) {
+        const parentText = parent.textContent || '';
+        if (parentText.includes('Trending') && 
+            parentText.length < 2000 &&
+            parentText.length > 10 &&
+            !parent.querySelector('input') &&
+            !parent.querySelector('button[data-href]') &&
+            !parent.closest('header') &&
+            !parent.closest('nav') &&
+            !parent.closest('main')) {
           parent.remove();
-          console.log('🚫 Aggressively removed Trending parent:', parent);
+          console.log('🚫 Removed Trending parent:', parent);
           removedCount++;
           break;
         }
@@ -173,20 +184,11 @@ function removeNotifications() {
   
   let removedCount = 0;
   
-  // Look for notification bells/icons - more comprehensive targeting
+  // Very specific targeting for notification bells only
   const notificationSelectors = [
-    '[aria-label*="notification"]',
-    '[aria-label*="Notification"]',
-    '[aria-label*="Activity"]',
-    '[data-testid*="notification"]',
-    '[data-testid*="bell"]',
-    '[class*="notification"]',
-    '[class*="bell"]',
     'button[aria-label*="notification"]',
-    'button[aria-label*="Notification"]',
+    'button[aria-label*="Notification"]', 
     'button[aria-label*="Activity"]',
-    'svg[class*="bell"]',
-    'svg[class*="notification"]',
     '[role="button"][aria-label*="notification"]',
     '[role="button"][aria-label*="Activity"]'
   ];
@@ -194,32 +196,17 @@ function removeNotifications() {
   notificationSelectors.forEach(selector => {
     try {
       document.querySelectorAll(selector).forEach(el => {
-        // Remove the bell icon and its container
-        el.remove();
-        console.log('🚫 Removed notification element:', el);
-        removedCount++;
+        // Only remove if it's clearly a notification button
+        const ariaLabel = el.getAttribute('aria-label') || '';
+        if (ariaLabel.toLowerCase().includes('notification') || 
+            ariaLabel.toLowerCase().includes('activity')) {
+          el.remove();
+          console.log('🚫 Removed notification button:', el);
+          removedCount++;
+        }
       });
     } catch (e) {
       // Invalid selector, skip
-    }
-  });
-  
-  // Also look for bell icons by SVG or icon classes
-  document.querySelectorAll('svg, [class*="icon"], [class*="Icon"]').forEach(el => {
-    const text = el.textContent || '';
-    const ariaLabel = el.getAttribute('aria-label') || '';
-    const className = (el.className || '').toString();
-    
-    if (text.includes('bell') || 
-        text.includes('notification') ||
-        ariaLabel.toLowerCase().includes('notification') ||
-        ariaLabel.toLowerCase().includes('activity') ||
-        ariaLabel.toLowerCase().includes('bell') ||
-        className.toLowerCase().includes('bell') ||
-        className.toLowerCase().includes('notification')) {
-      el.remove();
-      console.log('🚫 Removed bell icon by content:', el);
-      removedCount++;
     }
   });
   
@@ -232,59 +219,25 @@ function removeEmptyContainers() {
   
   let removedCount = 0;
   
-  // Look for empty containers that might be left behind
+  // Only remove very specific empty containers that are clearly leftover from trending
   document.querySelectorAll('div, section, aside').forEach(el => {
     const text = el.textContent || '';
-    const hasChildren = el.children.length > 0;
-    const hasText = text.trim().length > 0;
-    const hasImages = el.querySelector('img');
-    const hasLinks = el.querySelector('a');
-    const hasButtons = el.querySelector('button');
+    const className = (el.className || '').toString();
     
-    // Remove empty containers or containers with only whitespace/placeholders
-    if (!hasChildren && !hasText && !hasImages && !hasLinks && !hasButtons) {
-      // Check if it looks like an empty trending/up next container
-      const className = (el.className || '').toString();
-      const style = el.getAttribute('style') || '';
+    // Only remove if it's clearly an empty trending container
+    if (text.trim().length === 0 && 
+        el.children.length === 0 &&
+        (className.includes('trending') || 
+         className.includes('upNext') || 
+         className.includes('up-next')) &&
+        !el.closest('header') &&
+        !el.closest('nav') &&
+        !el.closest('main') &&
+        !el.closest('[role="main"]')) {
       
-      if (className.includes('trending') || 
-          className.includes('upNext') || 
-          className.includes('up-next') ||
-          className.includes('recommendation') ||
-          style.includes('border') ||
-          style.includes('rounded') ||
-          el.getAttribute('data-testid')?.includes('trending') ||
-          el.getAttribute('data-testid')?.includes('upNext')) {
-        
-        el.remove();
-        console.log('🚫 Removed empty container:', el);
-        removedCount++;
-      }
-    }
-  });
-  
-  // Look for containers with only placeholder content (like the oval border)
-  document.querySelectorAll('div, section, aside').forEach(el => {
-    const text = el.textContent || '';
-    const hasOnlyPlaceholders = text.trim().length === 0 || 
-                                text.includes('placeholder') ||
-                                text.includes('loading') ||
-                                text.includes('...');
-    
-    if (hasOnlyPlaceholders && el.children.length === 0) {
-      const className = (el.className || '').toString();
-      const style = el.getAttribute('style') || '';
-      
-      if (className.includes('trending') || 
-          className.includes('upNext') || 
-          className.includes('recommendation') ||
-          style.includes('border') ||
-          style.includes('rounded')) {
-        
-        el.remove();
-        console.log('🚫 Removed placeholder container:', el);
-        removedCount++;
-      }
+      el.remove();
+      console.log('🚫 Removed empty trending container:', el);
+      removedCount++;
     }
   });
   
