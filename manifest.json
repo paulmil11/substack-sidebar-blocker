@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Substack Sidebar Blocker",
-  "version": "2.0",
-  "description": "Blocks the 'Up Next' and 'Trending' sections on Substack to minimize distractions",
-  "permissions": [],
+  "name": "Substack Cleaner",
+  "version": "3.0",
+  "description": "Customizable Substack cleaner - remove trending, notifications, and up next sections",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Substack Cleaner Settings"
+  },
   "content_scripts": [
     {
       "matches": [

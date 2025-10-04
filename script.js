@@ -1,7 +1,36 @@
-// Substack Sidebar Blocker - Remove Trending Section Completely
-console.log('🚫 Substack Sidebar Blocker: Extension loaded');
+// Substack Cleaner - Customizable Substack cleaner
+console.log('🚫 Substack Cleaner: Extension loaded');
+
+// Get settings from storage
+let settings = {
+  removeTrending: true,
+  removeNotifications: false
+};
+
+// Load settings and listen for changes
+function loadSettings() {
+  chrome.storage.sync.get(['removeTrending', 'removeNotifications'], function(result) {
+    settings.removeTrending = result.removeTrending !== false; // Default to true
+    settings.removeNotifications = result.removeNotifications || false;
+    console.log('🚫 Settings loaded:', settings);
+  });
+}
+
+// Load settings initially
+loadSettings();
+
+// Listen for settings changes
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  if (namespace === 'sync') {
+    if (changes.removeTrending) settings.removeTrending = changes.removeTrending.newValue;
+    if (changes.removeNotifications) settings.removeNotifications = changes.removeNotifications.newValue;
+    console.log('🚫 Settings updated:', settings);
+  }
+});
 
 function removeTrendingSection() {
+  if (!settings.removeTrending) return;
+  
   console.log('🚫 Removing Trending sections completely...');
   
   let removedCount = 0;
@@ -135,7 +164,134 @@ function removeTrendingSection() {
   });
   
   console.log(`🚫 Removed ${removedCount} Trending sections completely`);
+}
+
+function removeNotifications() {
+  if (!settings.removeNotifications) return;
   
+  console.log('🚫 Removing notifications bell...');
+  
+  let removedCount = 0;
+  
+  // Look for notification bells/icons - more comprehensive targeting
+  const notificationSelectors = [
+    '[aria-label*="notification"]',
+    '[aria-label*="Notification"]',
+    '[aria-label*="Activity"]',
+    '[data-testid*="notification"]',
+    '[data-testid*="bell"]',
+    '[class*="notification"]',
+    '[class*="bell"]',
+    'button[aria-label*="notification"]',
+    'button[aria-label*="Notification"]',
+    'button[aria-label*="Activity"]',
+    'svg[class*="bell"]',
+    'svg[class*="notification"]',
+    '[role="button"][aria-label*="notification"]',
+    '[role="button"][aria-label*="Activity"]'
+  ];
+  
+  notificationSelectors.forEach(selector => {
+    try {
+      document.querySelectorAll(selector).forEach(el => {
+        // Remove the bell icon and its container
+        el.remove();
+        console.log('🚫 Removed notification element:', el);
+        removedCount++;
+      });
+    } catch (e) {
+      // Invalid selector, skip
+    }
+  });
+  
+  // Also look for bell icons by SVG or icon classes
+  document.querySelectorAll('svg, [class*="icon"], [class*="Icon"]').forEach(el => {
+    const text = el.textContent || '';
+    const ariaLabel = el.getAttribute('aria-label') || '';
+    const className = (el.className || '').toString();
+    
+    if (text.includes('bell') || 
+        text.includes('notification') ||
+        ariaLabel.toLowerCase().includes('notification') ||
+        ariaLabel.toLowerCase().includes('activity') ||
+        ariaLabel.toLowerCase().includes('bell') ||
+        className.toLowerCase().includes('bell') ||
+        className.toLowerCase().includes('notification')) {
+      el.remove();
+      console.log('🚫 Removed bell icon by content:', el);
+      removedCount++;
+    }
+  });
+  
+  console.log(`🚫 Removed ${removedCount} notification elements`);
+}
+
+
+function removeEmptyContainers() {
+  console.log('🚫 Removing empty containers and borders...');
+  
+  let removedCount = 0;
+  
+  // Look for empty containers that might be left behind
+  document.querySelectorAll('div, section, aside').forEach(el => {
+    const text = el.textContent || '';
+    const hasChildren = el.children.length > 0;
+    const hasText = text.trim().length > 0;
+    const hasImages = el.querySelector('img');
+    const hasLinks = el.querySelector('a');
+    const hasButtons = el.querySelector('button');
+    
+    // Remove empty containers or containers with only whitespace/placeholders
+    if (!hasChildren && !hasText && !hasImages && !hasLinks && !hasButtons) {
+      // Check if it looks like an empty trending/up next container
+      const className = (el.className || '').toString();
+      const style = el.getAttribute('style') || '';
+      
+      if (className.includes('trending') || 
+          className.includes('upNext') || 
+          className.includes('up-next') ||
+          className.includes('recommendation') ||
+          style.includes('border') ||
+          style.includes('rounded') ||
+          el.getAttribute('data-testid')?.includes('trending') ||
+          el.getAttribute('data-testid')?.includes('upNext')) {
+        
+        el.remove();
+        console.log('🚫 Removed empty container:', el);
+        removedCount++;
+      }
+    }
+  });
+  
+  // Look for containers with only placeholder content (like the oval border)
+  document.querySelectorAll('div, section, aside').forEach(el => {
+    const text = el.textContent || '';
+    const hasOnlyPlaceholders = text.trim().length === 0 || 
+                                text.includes('placeholder') ||
+                                text.includes('loading') ||
+                                text.includes('...');
+    
+    if (hasOnlyPlaceholders && el.children.length === 0) {
+      const className = (el.className || '').toString();
+      const style = el.getAttribute('style') || '';
+      
+      if (className.includes('trending') || 
+          className.includes('upNext') || 
+          className.includes('recommendation') ||
+          style.includes('border') ||
+          style.includes('rounded')) {
+        
+        el.remove();
+        console.log('🚫 Removed placeholder container:', el);
+        removedCount++;
+      }
+    }
+  });
+  
+  console.log(`🚫 Removed ${removedCount} empty containers`);
+}
+
+function addCredit() {
   // Add credit to the page if not already added
   if (!document.querySelector('.substack-credit')) {
     const credit = document.createElement('div');
@@ -146,20 +302,30 @@ function removeTrendingSection() {
   }
 }
 
+function runCleaner() {
+  console.log('🚫 runCleaner() called');
+  console.log('🚫 Current settings:', settings);
+  
+  removeTrendingSection();
+  removeNotifications();
+  removeEmptyContainers();
+  addCredit();
+}
+
 // Run immediately
-removeTrendingSection();
+runCleaner();
 
 // Run after DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', removeTrendingSection);
+  document.addEventListener('DOMContentLoaded', runCleaner);
 }
 
 // Run on window load
-window.addEventListener('load', removeTrendingSection);
+window.addEventListener('load', runCleaner);
 
 // Watch for new content - run immediately without delay
 const observer = new MutationObserver(() => {
-  removeTrendingSection();
+  runCleaner();
 });
 
 observer.observe(document.body, {
@@ -170,7 +336,7 @@ observer.observe(document.body, {
 // Run more aggressively for longer
 let runs = 0;
 const interval = setInterval(() => {
-  removeTrendingSection();
+  runCleaner();
   runs++;
   if (runs >= 60) { // Run for 30 seconds (60 * 500ms)
     clearInterval(interval);
